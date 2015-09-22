@@ -309,19 +309,8 @@ int main(int argc, char **argv) {
 		goto error_pid_file;
 	}
 
-	if (daemon && _x11_enabled) {
-		log_info("RED Brick API Daemon %s started (daemonized, X11 enabled) on %s image",
-		         VERSION_STRING, _image_version);
-	} else if (daemon) {
-		log_info("RED Brick API Daemon %s started (daemonized) on %s image",
-		         VERSION_STRING, _image_version);
-	} else if (_x11_enabled) {
-		log_info("RED Brick API Daemon %s started (X11 enabled) on %s image",
-		         VERSION_STRING, _image_version);
-	} else {
-		log_info("RED Brick API Daemon %s started on %s image",
-		         VERSION_STRING, _image_version);
-	}
+	log_info("RED Brick API Daemon %s started (pid: %u, daemonized: %d, X11: %d) on %s image",
+	         VERSION_STRING, getpid(), daemon ? 1 : 0, _x11_enabled ? 1 : 0, _image_version);
 
 	if (debug_filter != NULL) {
 		log_enable_debug_override(debug_filter);
