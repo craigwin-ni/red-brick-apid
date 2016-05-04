@@ -1,6 +1,6 @@
 /*
  * redapid
- * Copyright (C) 2014-2015 Matthias Bolte <matthias@tinkerforge.com>
+ * Copyright (C) 2014-2016 Matthias Bolte <matthias@tinkerforge.com>
  *
  * file.c: File object implementation
  *
@@ -1119,8 +1119,8 @@ APIE file_get_info(File *file, Session *session, uint8_t *type,
 }
 
 // public API
-APIE file_read(File *file, uint8_t *buffer, uint8_t length_to_read,
-               uint8_t *length_read) {
+APIE file_read_(File *file, uint8_t *buffer, uint8_t length_to_read,
+                uint8_t *length_read) {
 	int rc;
 	APIE error_code;
 
@@ -1220,8 +1220,8 @@ APIE file_abort_async_read(File *file) {
 }
 
 // public API
-APIE file_write(File *file, uint8_t *buffer, uint8_t length_to_write,
-                uint8_t *length_written) {
+APIE file_write_(File *file, uint8_t *buffer, uint8_t length_to_write,
+                 uint8_t *length_written) {
 	int rc;
 	APIE error_code;
 

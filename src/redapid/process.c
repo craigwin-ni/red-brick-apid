@@ -1,6 +1,6 @@
 /*
  * redapid
- * Copyright (C) 2014-2015 Matthias Bolte <matthias@tinkerforge.com>
+ * Copyright (C) 2014-2016 Matthias Bolte <matthias@tinkerforge.com>
  *
  * process.c: Process object implementation
  *
@@ -398,7 +398,7 @@ APIE process_spawn(ObjectID executable_id, ObjectID arguments_id,
 	pid_t pid;
 	int status_pipe[2];
 	int sc_open_max;
-	FILE *log_file;
+	IO *log_output;
 	Process *process;
 
 	// acquire and lock executable string object
@@ -663,13 +663,13 @@ APIE process_spawn(ObjectID executable_id, ObjectID arguments_id,
 		// stderr is the default log output in non-daemon mode. if this is
 		// the case then disable the log output before redirecting stderr to
 		// avoid polluting stderr for the new process
-		log_file = log_get_file();
+		log_output = log_get_output();
 
-		if (log_file != NULL && fileno(log_file) == STDERR_FILENO) {
+		if (log_output != NULL && log_output->handle == STDERR_FILENO) {
 			log_debug("Disable logging to stderr for child process (executable: %s, pid: %u)",
 			          executable->buffer, getpid());
 
-			log_set_file(NULL);
+			log_set_output(NULL);
 		}
 
 		// redirect stderr
@@ -696,7 +696,7 @@ APIE process_spawn(ObjectID executable_id, ObjectID arguments_id,
 		// the log file is still open at this point. the next step is to close
 		// all remaining file descriptors. just for good measure disable the
 		// log output beforehand
-		log_set_file(NULL);
+		log_set_output(NULL);
 
 		// close all file descriptors except the std* ones
 		for (i = STDERR_FILENO + 1; i < sc_open_max; ++i) {

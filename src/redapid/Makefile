@@ -63,7 +63,8 @@ else
 	SOURCES += ../daemonlib/event_posix.c
 endif
 
-SOURCES += ../daemonlib/io.c \
+SOURCES += ../daemonlib/file.c \
+           ../daemonlib/io.c \
            ../daemonlib/log.c \
            ../daemonlib/log_posix.c \
            ../daemonlib/node.c \

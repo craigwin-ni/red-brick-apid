@@ -1,6 +1,6 @@
 /*
  * redapid
- * Copyright (C) 2014 Matthias Bolte <matthias@tinkerforge.com>
+ * Copyright (C) 2014, 2016 Matthias Bolte <matthias@tinkerforge.com>
  *
  * api.c: RED Brick API implementation
  *
@@ -486,8 +486,8 @@ CALL_FILE_FUNCTION_WITH_SESSION(GetFileInfo, get_file_info, {
 })
 
 CALL_FILE_FUNCTION(ReadFile, read_file, {
-	response.error_code = file_read(file, response.buffer, request->length_to_read,
-	                                &response.length_read);
+	response.error_code = file_read_(file, response.buffer, request->length_to_read,
+	                                 &response.length_read);
 })
 
 CALL_FILE_PROCEDURE(ReadFileAsync, read_file_async, {
@@ -502,9 +502,9 @@ CALL_FILE_FUNCTION(AbortAsyncFileRead, abort_async_file_read, {
 })
 
 CALL_FILE_FUNCTION(WriteFile, write_file, {
-	response.error_code = file_write(file, request->buffer,
-	                                 request->length_to_write,
-	                                 &response.length_written);
+	response.error_code = file_write_(file, request->buffer,
+	                                  request->length_to_write,
+	                                  &response.length_written);
 })
 
 CALL_FILE_PROCEDURE(WriteFileUnchecked, write_file_unchecked, {}, {

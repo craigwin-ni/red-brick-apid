@@ -1,6 +1,6 @@
 /*
  * redapid
- * Copyright (C) 2014-2015 Matthias Bolte <matthias@tinkerforge.com>
+ * Copyright (C) 2014-2016 Matthias Bolte <matthias@tinkerforge.com>
  *
  * file.h: File object implementation
  *
@@ -160,13 +160,13 @@ APIE file_get_info(File *file, Session *session, uint8_t *type,
                    uint64_t *modification_timestamp,
                    uint64_t *status_change_timestamp);
 
-APIE file_read(File *file, uint8_t *buffer, uint8_t length_to_read,
-               uint8_t *length_read);
+APIE file_read_(File *file, uint8_t *buffer, uint8_t length_to_read,
+                uint8_t *length_read);
 PacketE file_read_async(File *file, uint64_t length_to_read);
 APIE file_abort_async_read(File *file);
 
-APIE file_write(File *file, uint8_t *buffer, uint8_t length_to_write,
-                uint8_t *length_written);
+APIE file_write_(File *file, uint8_t *buffer, uint8_t length_to_write,
+                 uint8_t *length_written);
 PacketE file_write_unchecked(File *file, uint8_t *buffer, uint8_t length_to_write);
 PacketE file_write_async(File *file, uint8_t *buffer, uint8_t length_to_write);
 
