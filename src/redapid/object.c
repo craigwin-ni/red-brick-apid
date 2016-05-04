@@ -1,6 +1,6 @@
 /*
  * redapid
- * Copyright (C) 2014-2015 Matthias Bolte <matthias@tinkerforge.com>
+ * Copyright (C) 2014-2016 Matthias Bolte <matthias@tinkerforge.com>
  *
  * object.c: Object implementation
  *
@@ -272,10 +272,7 @@ APIE object_add_external_reference(Object *object, Session *session) {
 		                 object->external_reference_count, session->id);
 	}
 
-	node_reset(&external_reference->object_node);
 	node_insert_before(&object->external_reference_sentinel, &external_reference->object_node);
-
-	node_reset(&external_reference->session_node);
 	node_insert_before(&session->external_reference_sentinel, &external_reference->session_node);
 
 	external_reference->object = object;
