@@ -1,6 +1,6 @@
 /*
  * redapid
- * Copyright (C) 2014-2015 Matthias Bolte <matthias@tinkerforge.com>
+ * Copyright (C) 2014-2016 Matthias Bolte <matthias@tinkerforge.com>
  *
  * program_scheduler.c: Program object scheduler
  *
@@ -771,7 +771,7 @@ static File *program_scheduler_prepare_continuous_log(ProgramScheduler *program_
 	}
 
 	// write header
-	if (write(file->fd, buffer, strlen(buffer)) < 0) {
+	if (robust_write(file->fd, buffer, strlen(buffer)) < 0) {
 		program_scheduler_handle_error(program_scheduler, true,
 		                               "Could not write timestamp to %s log file: %s (%d)",
 		                               suffix, get_errno_name(errno), errno);

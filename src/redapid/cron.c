@@ -1,6 +1,6 @@
 /*
  * redapid
- * Copyright (C) 2014 Matthias Bolte <matthias@tinkerforge.com>
+ * Copyright (C) 2014, 2016 Matthias Bolte <matthias@tinkerforge.com>
  *
  * cron.c: Cron specific functions
  *
@@ -273,7 +273,7 @@ APIE cron_add_entry(ObjectID program_id, const char *identifier, const char *fie
 		goto cleanup;
 	}
 
-	if (write(fd, content, strlen(content)) < 0) {
+	if (robust_write(fd, content, strlen(content)) < 0) {
 		error_code = api_get_error_code_from_errno();
 
 		log_error("Could not write fields to temporary cron file '%s': %s (%d)",

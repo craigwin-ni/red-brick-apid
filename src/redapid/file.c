@@ -298,7 +298,7 @@ static int file_handle_read(File *file, void *buffer, int length) {
 		return -1;
 	}
 
-	return read(file->fd, buffer, length);
+	return robust_read(file->fd, buffer, length);
 }
 
 // sets errno on error
@@ -309,7 +309,7 @@ static int file_handle_write(File *file, void *buffer, int length) {
 		return -1;
 	}
 
-	return write(file->fd, buffer, length);
+	return robust_write(file->fd, buffer, length);
 }
 
 // sets errno on error
