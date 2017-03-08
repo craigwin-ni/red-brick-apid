@@ -72,7 +72,7 @@ static void read_image_version(void) {
 	fclose(fp);
 
 	if (length < 0) {
-		string_copy(_image_version, sizeof(_image_version), "<unknown>");
+		string_copy(_image_version, sizeof(_image_version), "<unknown>", -1);
 
 		return;
 	}
@@ -86,7 +86,7 @@ static void read_image_version(void) {
 	_image_version[length] = '\0';
 
 	if (length == 0) {
-		string_copy(_image_version, sizeof(_image_version), "<unknown>");
+		string_copy(_image_version, sizeof(_image_version), "<unknown>", -1);
 
 		return;
 	}

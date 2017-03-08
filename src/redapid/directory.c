@@ -199,7 +199,7 @@ APIE directory_open(ObjectID name_id, Session *session, ObjectID *id) {
 	directory->name_length = name->length;
 	directory->dp = dp;
 
-	string_copy(directory->buffer, sizeof(directory->buffer), name->buffer);
+	string_copy(directory->buffer, sizeof(directory->buffer), name->buffer, -1);
 
 	if (directory->buffer[directory->name_length - 1] != '/') {
 		string_append(directory->buffer, sizeof(directory->buffer), "/");
