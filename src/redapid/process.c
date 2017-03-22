@@ -1,6 +1,6 @@
 /*
  * redapid
- * Copyright (C) 2014-2016 Matthias Bolte <matthias@tinkerforge.com>
+ * Copyright (C) 2014-2017 Matthias Bolte <matthias@tinkerforge.com>
  *
  * process.c: Process object implementation
  *
@@ -83,7 +83,7 @@ static void process_destroy(Object *object) {
 
 	// remove the state change pipe from the event loop to avoid sending
 	// callbacks in case the child process is still alive and has to be killed
-	event_remove_source(process->state_change_pipe.read_end, EVENT_SOURCE_TYPE_GENERIC);
+	event_remove_source(process->state_change_pipe.base.read_handle, EVENT_SOURCE_TYPE_GENERIC);
 
 	// FIXME: this code here has the same race condition as process_kill
 	if (process_is_alive(process)) {
@@ -665,7 +665,7 @@ APIE process_spawn(ObjectID executable_id, ObjectID arguments_id,
 		// avoid polluting stderr for the new process
 		log_output = log_get_output();
 
-		if (log_output != NULL && log_output->handle == STDERR_FILENO) {
+		if (log_output != NULL && log_output->write_handle == STDERR_FILENO) {
 			log_debug("Disable logging to stderr for child process (executable: %s, pid: %u)",
 			          executable->buffer, getpid());
 
@@ -783,7 +783,7 @@ APIE process_spawn(ObjectID executable_id, ObjectID arguments_id,
 
 	phase = 13;
 
-	if (event_add_source(process->state_change_pipe.read_end, EVENT_SOURCE_TYPE_GENERIC,
+	if (event_add_source(process->state_change_pipe.base.read_handle, EVENT_SOURCE_TYPE_GENERIC,
 	                     EVENT_READ, process_handle_state_change, process) < 0) {
 		goto cleanup;
 	}
@@ -827,7 +827,7 @@ APIE process_spawn(ObjectID executable_id, ObjectID arguments_id,
 cleanup:
 	switch (phase) { // no breaks, all cases fall through intentionally
 	case 14:
-		event_remove_source(process->state_change_pipe.read_end, EVENT_SOURCE_TYPE_GENERIC);
+		event_remove_source(process->state_change_pipe.base.read_handle, EVENT_SOURCE_TYPE_GENERIC);
 
 	case 13:
 		pipe_destroy(&process->state_change_pipe);

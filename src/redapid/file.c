@@ -1,6 +1,6 @@
 /*
  * redapid
- * Copyright (C) 2014-2016 Matthias Bolte <matthias@tinkerforge.com>
+ * Copyright (C) 2014-2017 Matthias Bolte <matthias@tinkerforge.com>
  *
  * file.c: File object implementation
  *
@@ -209,11 +209,11 @@ static void file_destroy(Object *object) {
 
 	if (file->type == FILE_TYPE_PIPE) {
 		if ((file->events & FILE_EVENT_READABLE) != 0) {
-			event_remove_source(file->pipe.read_end, EVENT_SOURCE_TYPE_GENERIC);
+			event_remove_source(file->pipe.base.read_handle, EVENT_SOURCE_TYPE_GENERIC);
 		}
 
 		if ((file->events & FILE_EVENT_WRITABLE) != 0) {
-			event_remove_source(file->pipe.write_end, EVENT_SOURCE_TYPE_GENERIC);
+			event_remove_source(file->pipe.base.write_handle, EVENT_SOURCE_TYPE_GENERIC);
 		}
 
 		pipe_destroy(&file->pipe);
@@ -273,7 +273,7 @@ static void file_send_events_occurred_callback(File *file, uint16_t events) {
 static void file_handle_readable_event(void *opaque) {
 	File *file = opaque;
 
-	event_remove_source(file->pipe.read_end, EVENT_SOURCE_TYPE_GENERIC);
+	event_remove_source(file->pipe.base.read_handle, EVENT_SOURCE_TYPE_GENERIC);
 
 	file->events &= ~FILE_EVENT_READABLE;
 
@@ -283,7 +283,7 @@ static void file_handle_readable_event(void *opaque) {
 static void file_handle_writable_event(void *opaque) {
 	File *file = opaque;
 
-	event_remove_source(file->pipe.write_end, EVENT_SOURCE_TYPE_GENERIC);
+	event_remove_source(file->pipe.base.write_handle, EVENT_SOURCE_TYPE_GENERIC);
 
 	file->events &= ~FILE_EVENT_WRITABLE;
 
@@ -961,7 +961,7 @@ APIE pipe_create_(uint32_t flags, uint64_t length, Session *session,
 
 	phase = 3;
 
-	if (length > 0 && fcntl(file->pipe.read_end, F_SETPIPE_SZ, (int)length) < 0) {
+	if (length > 0 && fcntl(file->pipe.base.read_handle, F_SETPIPE_SZ, (int)length) < 0) {
 		error_code = api_get_error_code_from_errno();
 
 		log_error("Could not change pipe buffer size to %"PRIu64": %s (%d)",
@@ -1067,7 +1067,7 @@ APIE file_get_info(File *file, Session *session, uint8_t *type,
 	*flags = file->flags;
 
 	if (file->type == FILE_TYPE_PIPE) {
-		rc = fcntl(file->pipe.read_end, F_GETPIPE_SZ);
+		rc = fcntl(file->pipe.base.read_handle, F_GETPIPE_SZ);
 
 		if (rc < 0) {
 			error_code = api_get_error_code_from_errno();
@@ -1423,27 +1423,27 @@ APIE file_set_events(File *file, uint16_t events) {
 	}
 
 	if ((events & FILE_EVENT_READABLE) != 0 && (file->events & FILE_EVENT_READABLE) == 0) {
-		if (event_add_source(file->pipe.read_end, EVENT_SOURCE_TYPE_GENERIC, EVENT_READ,
+		if (event_add_source(file->pipe.base.read_handle, EVENT_SOURCE_TYPE_GENERIC, EVENT_READ,
 		                     file_handle_readable_event, file) < 0) {
 			return API_E_INTERNAL_ERROR;
 		}
 
 		file->events |= FILE_EVENT_READABLE;
 	} else if ((events & FILE_EVENT_READABLE) == 0 && (file->events & FILE_EVENT_READABLE) != 0) {
-		event_remove_source(file->pipe.read_end, EVENT_SOURCE_TYPE_GENERIC);
+		event_remove_source(file->pipe.base.read_handle, EVENT_SOURCE_TYPE_GENERIC);
 
 		file->events &= ~FILE_EVENT_READABLE;
 	}
 
 	if ((events & FILE_EVENT_WRITABLE) != 0 && (file->events & FILE_EVENT_WRITABLE) == 0) {
-		if (event_add_source(file->pipe.write_end, EVENT_SOURCE_TYPE_GENERIC, EVENT_WRITE,
+		if (event_add_source(file->pipe.base.write_handle, EVENT_SOURCE_TYPE_GENERIC, EVENT_WRITE,
 		                     file_handle_writable_event, file) < 0) {
 			return API_E_INTERNAL_ERROR;
 		}
 
 		file->events |= FILE_EVENT_WRITABLE;
 	} else if ((events & FILE_EVENT_WRITABLE) == 0 && (file->events & FILE_EVENT_WRITABLE) != 0) {
-		event_remove_source(file->pipe.write_end, EVENT_SOURCE_TYPE_GENERIC);
+		event_remove_source(file->pipe.base.write_handle, EVENT_SOURCE_TYPE_GENERIC);
 
 		file->events &= ~FILE_EVENT_WRITABLE;
 	}
@@ -1460,7 +1460,7 @@ APIE file_get_events(File *file, uint16_t *events) {
 
 IOHandle file_get_read_handle(File *file) {
 	if (file->type == FILE_TYPE_PIPE) {
-		return file->pipe.read_end;
+		return file->pipe.base.read_handle;
 	} else {
 		return file->fd;
 	}
@@ -1468,7 +1468,7 @@ IOHandle file_get_read_handle(File *file) {
 
 IOHandle file_get_write_handle(File *file) {
 	if (file->type == FILE_TYPE_PIPE) {
-		return file->pipe.write_end;
+		return file->pipe.base.write_handle;
 	} else {
 		return file->fd;
 	}

@@ -1,6 +1,6 @@
 /*
  * redapid
- * Copyright (C) 2014-2015 Matthias Bolte <matthias@tinkerforge.com>
+ * Copyright (C) 2014-2015, 2017 Matthias Bolte <matthias@tinkerforge.com>
  *
  * network.c: Network specific functions
  *
@@ -138,7 +138,7 @@ static void network_handle_cron_accept(void *opaque) {
 		return;
 	}
 
-	log_debug("Added new socat (handle: %d)", socat->socket->base.handle);
+	log_debug("Added new socat (handle: %d)", socat->socket->handle);
 }
 
 static int network_open_server_socket(Socket *server_socket,
@@ -192,7 +192,7 @@ static int network_open_server_socket(Socket *server_socket,
 
 	log_debug("Started listening to '%s'", socket_filename);
 
-	if (event_add_source(server_socket->base.handle, EVENT_SOURCE_TYPE_GENERIC,
+	if (event_add_source(server_socket->handle, EVENT_SOURCE_TYPE_GENERIC,
 	                     EVENT_READ, handle_accept, NULL) < 0) {
 		goto error;
 	}
@@ -251,13 +251,13 @@ void network_exit(void) {
 	}
 
 	if (_cron_socket_filename != NULL) {
-		event_remove_source(_cron_server_socket.base.handle, EVENT_SOURCE_TYPE_GENERIC);
+		event_remove_source(_cron_server_socket.handle, EVENT_SOURCE_TYPE_GENERIC);
 		socket_destroy(&_cron_server_socket);
 		unlink(_cron_socket_filename);
 	}
 
 	if (_brickd_socket_filename != NULL) {
-		event_remove_source(_brickd_server_socket.base.handle, EVENT_SOURCE_TYPE_GENERIC);
+		event_remove_source(_brickd_server_socket.handle, EVENT_SOURCE_TYPE_GENERIC);
 		socket_destroy(&_brickd_server_socket);
 		unlink(_brickd_socket_filename);
 	}
@@ -285,7 +285,7 @@ void network_cleanup_brickd_and_socats(void) {
 
 		if (socat->disconnected) {
 			log_debug("Removing disconnected socat (handle: %d)",
-			          socat->socket->base.handle);
+			          socat->socket->handle);
 
 			array_remove(&_socats, i, (ItemDestroyFunction)socat_destroy);
 		}

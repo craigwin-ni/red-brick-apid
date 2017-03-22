@@ -1,6 +1,6 @@
 /*
  * redapid
- * Copyright (C) 2014 Matthias Bolte <matthias@tinkerforge.com>
+ * Copyright (C) 2014, 2017 Matthias Bolte <matthias@tinkerforge.com>
  *
  * socat.c: Socat client for incoming cron events
  *
@@ -41,8 +41,7 @@ static void socat_handle_receive(void *opaque) {
 	                        sizeof(CronNotification) - socat->notification_used);
 
 	if (length == 0) {
-		log_debug("Socat (handle: %d) disconnected by peer",
-		          socat->socket->base.handle);
+		log_debug("Socat (handle: %d) disconnected by peer", socat->socket->handle);
 
 		socat->disconnected = true;
 
@@ -52,13 +51,13 @@ static void socat_handle_receive(void *opaque) {
 	if (length < 0) {
 		if (errno_interrupted()) {
 			log_debug("Receiving from socat (handle: %d) was interrupted, retrying",
-			          socat->socket->base.handle);
+			          socat->socket->handle);
 		} else if (errno_would_block()) {
 			log_debug("Receiving from socat (handle: %d) Daemon would block, retrying",
-			          socat->socket->base.handle);
+			          socat->socket->handle);
 		} else {
 			log_error("Could not receive from socat (handle: %d), disconnecting socat: %s (%d)",
-			          socat->socket->base.handle, get_errno_name(errno), errno);
+			          socat->socket->handle, get_errno_name(errno), errno);
 
 			socat->disconnected = true;
 		}
@@ -76,24 +75,24 @@ static void socat_handle_receive(void *opaque) {
 	cron_handle_notification(&socat->notification);
 
 	log_debug("Socat (handle: %d) received complete request, disconnecting socat",
-	          socat->socket->base.handle);
+	          socat->socket->handle);
 
 	socat->disconnected = true;
 }
 
 int socat_create(Socat *socat, Socket *socket) {
-	log_debug("Creating socat from UNIX domain socket (handle: %d)", socket->base.handle);
+	log_debug("Creating socat from UNIX domain socket (handle: %d)", socket->handle);
 
 	socat->socket = socket;
 	socat->disconnected = false;
 	socat->notification_used = 0;
 
-	return event_add_source(socat->socket->base.handle, EVENT_SOURCE_TYPE_GENERIC,
+	return event_add_source(socat->socket->handle, EVENT_SOURCE_TYPE_GENERIC,
 	                        EVENT_READ, socat_handle_receive, socat);
 }
 
 void socat_destroy(Socat *socat) {
-	event_remove_source(socat->socket->base.handle, EVENT_SOURCE_TYPE_GENERIC);
+	event_remove_source(socat->socket->handle, EVENT_SOURCE_TYPE_GENERIC);
 	socket_destroy(socat->socket);
 	free(socat->socket);
 }
