@@ -36,7 +36,8 @@ typedef enum {
 	PROGRAM_STDIO_REDIRECTION_FILE,
 	PROGRAM_STDIO_REDIRECTION_INDIVIDUAL_LOG, // can only be used for stdout and stderr
 	PROGRAM_STDIO_REDIRECTION_CONTINUOUS_LOG, // can only be used for stdout and stderr
-	PROGRAM_STDIO_REDIRECTION_STDOUT          // can only be used to redirect stderr to stdout
+	PROGRAM_STDIO_REDIRECTION_STDOUT,         // can only be used to redirect stderr to stdout
+	//PROGRAM_STDIO_REDIRECTION_PSEUDO_TERMINAL // FIXME: add for stdin, stdout and stderr
 } ProgramStdioRedirection;
 
 typedef enum {
