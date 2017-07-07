@@ -49,7 +49,7 @@ case "$1" in
 	# here for lo to come up to ensure that scheduled programs can connect via
 	# localhost to brickd
 	TIMEOUT=60
-	RESULT=`ifconfig | grep -e '^lo '`
+	RESULT=`ls /sys/class/net | grep -e '^lo'`
 	while [ $TIMEOUT -gt 0 ] && [ -z "$RESULT" ]; do
 		sleep 1
 		TIMEOUT=$(($TIMEOUT - 1))
