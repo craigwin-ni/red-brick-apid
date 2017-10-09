@@ -1,6 +1,6 @@
 /*
  * redapid
- * Copyright (C) 2014-2015 Matthias Bolte <matthias@tinkerforge.com>
+ * Copyright (C) 2014-2015, 2017 Matthias Bolte <matthias@tinkerforge.com>
  *
  * version.h: Version information
  *
@@ -38,7 +38,7 @@
 
 #define VERSION_MAJOR 2
 #define VERSION_MINOR 0
-#define VERSION_RELEASE 2
+#define VERSION_RELEASE 3
 #define VERSION_SUFFIX_STRING ""
 
 #define INT_TO_STRING_(x) #x

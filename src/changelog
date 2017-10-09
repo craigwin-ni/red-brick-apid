@@ -9,3 +9,6 @@
 
 2015-07-29: 2.0.2 (78d9653)
 - Use ACL to grant www-data user write access to the programs bin directory
+
+2017-10-09: 2.0.3 (<unknown>)
+- Make loopback interface check work on RED Brick Image 1.10
