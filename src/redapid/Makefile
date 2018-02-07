@@ -9,6 +9,7 @@ CC ?= gcc
 WITH_LOGGING ?= yes
 WITH_EPOLL ?= yes
 WITH_DEBUG ?= no
+WITH_RED_BRICK ?= check
 
 ## RULES ######################################################################
 
@@ -46,6 +47,20 @@ endif
 ifneq ($(findstring $(MAKEFLAGS),s),s)
 ifndef V
 	E := @
+endif
+endif
+
+ifeq ($(WITH_RED_BRICK),check)
+ifneq ($(wildcard /proc/red_brick_uid),)
+	# Linux and RED Brick <= 1.9
+	WITH_RED_BRICK := 9
+else
+ifeq ($(findstring red-brick,$(shell uname -r)),red-brick)
+	# Linux and RED Brick > 1.9
+	WITH_RED_BRICK := 10
+else
+$(error Could not detect RED Brick Image version)
+endif
 endif
 endif
 
@@ -131,11 +146,14 @@ ifeq ($(WITH_EPOLL),yes)
 	CFLAGS += -DDAEMONLIB_WITH_EPOLL
 endif
 
+CFLAGS += -DDAEMONLIB_WITH_RED_BRICK=${WITH_RED_BRICK}
+
 ifneq ($(MAKECMDGOALS),clean)
 $(info features:)
-$(info - logging: $(WITH_LOGGING))
-$(info - epoll:   $(WITH_EPOLL))
-$(info - debug:   $(WITH_DEBUG))
+$(info - logging:   $(WITH_LOGGING))
+$(info - epoll:     $(WITH_EPOLL))
+$(info - debug:     $(WITH_DEBUG))
+$(info - red-brick: $(WITH_RED_BRICK))
 endif
 
 .PHONY: all clean
