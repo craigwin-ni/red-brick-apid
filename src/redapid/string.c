@@ -1,6 +1,6 @@
 /*
  * redapid
- * Copyright (C) 2014-2015 Matthias Bolte <matthias@tinkerforge.com>
+ * Copyright (C) 2014-2015, 2018 Matthias Bolte <matthias@tinkerforge.com>
  *
  * string.c: String object implementation
  *
@@ -163,11 +163,14 @@ cleanup:
 	switch (phase) { // no breaks, all cases fall through intentionally
 	case 2:
 		free(*string);
+		// fall through
 
 	case 1:
 		if (!external) {
 			free(buffer);
 		}
+
+		// fall through
 
 	default:
 		break;

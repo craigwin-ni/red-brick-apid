@@ -1,6 +1,6 @@
 /*
  * redapid
- * Copyright (C) 2014-2015 Matthias Bolte <matthias@tinkerforge.com>
+ * Copyright (C) 2014-2015, 2018 Matthias Bolte <matthias@tinkerforge.com>
  *
  * program.c: Program object implementation
  *
@@ -286,21 +286,27 @@ cleanup:
 	switch (phase) { // no breaks, all cases fall through intentionally
 	case 6:
 		program_scheduler_destroy(&program->scheduler);
+		// fall through
 
 	case 5:
 		free(program);
+		// fall through
 
 	case 4:
 		string_unlock_and_release(none_message);
+		// fall through
 
 	case 3:
 		string_unlock_and_release(root_directory_object);
+		// fall through
 
 	case 2:
 		string_unlock_and_release(identifier_object);
+		// fall through
 
 	case 1:
 		program_config_destroy(&program_config);
+		// fall through
 
 	default:
 		break;
@@ -454,24 +460,31 @@ cleanup:
 	switch (phase) { // no breaks, all cases fall through intentionally
 	case 7:
 		program_scheduler_destroy(&program->scheduler);
+		// fall through
 
 	case 6:
 		program_config_destroy(&program->config);
+		// fall through
 
 	case 5:
 		free(program);
+		// fall through
 
 	case 4:
 		string_unlock_and_release(none_message);
+		// fall through
 
 	case 3:
 		rmdir(root_directory->buffer); // FIXME: do a recursive remove here
+		// fall through
 
 	case 2:
 		string_unlock_and_release(root_directory);
+		// fall through
 
 	case 1:
 		string_unlock_and_release(identifier);
+		// fall through
 
 	default:
 		break;
@@ -731,15 +744,19 @@ cleanup:
 		memcpy(&program->config, &backup, sizeof(program->config));
 
 		string_unlock_and_release(working_directory);
+		// fall through
 
 	case 3:
 		list_unlock_and_release(environment);
+		// fall through
 
 	case 2:
 		list_unlock_and_release(arguments);
+		// fall through
 
 	case 1:
 		string_unlock_and_release(executable);
+		// fall through
 
 	default:
 		break;
@@ -809,12 +826,15 @@ cleanup:
 	switch (phase) { // no breaks, all cases fall through intentionally
 	case 3:
 		object_remove_external_reference(&program->config.environment->base, session);
+		// fall through
 
 	case 2:
 		object_remove_external_reference(&program->config.arguments->base, session);
+		// fall through
 
 	case 1:
 		object_remove_external_reference(&program->config.executable->base, session);
+		// fall through
 
 	default:
 		break;
@@ -1002,21 +1022,28 @@ cleanup:
 	switch (phase) { // no breaks, all cases fall through intentionally
 	case 4:
 		memcpy(&program->config, &backup, sizeof(program->config));
+		// fall through
 
 	case 3:
 		if (stderr_redirection == PROGRAM_STDIO_REDIRECTION_FILE) {
 			string_unlock_and_release(stderr_file_name);
 		}
 
+		// fall through
+
 	case 2:
 		if (stdout_redirection == PROGRAM_STDIO_REDIRECTION_FILE) {
 			string_unlock_and_release(stdout_file_name);
 		}
 
+		// fall through
+
 	case 1:
 		if (stdin_redirection == PROGRAM_STDIO_REDIRECTION_FILE) {
 			string_unlock_and_release(stdin_file_name);
 		}
+
+		// fall through
 
 	default:
 		break;
@@ -1112,10 +1139,14 @@ cleanup:
 			object_remove_external_reference(&program->config.stdout_file_name->base, session);
 		}
 
+		// fall through
+
 	case 1:
 		if (program->config.stdin_redirection == PROGRAM_STDIO_REDIRECTION_FILE) {
 			object_remove_external_reference(&program->config.stdin_file_name->base, session);
 		}
+
+		// fall through
 
 	default:
 		break;

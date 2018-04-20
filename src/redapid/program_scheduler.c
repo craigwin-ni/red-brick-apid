@@ -1,6 +1,6 @@
 /*
  * redapid
- * Copyright (C) 2014-2016 Matthias Bolte <matthias@tinkerforge.com>
+ * Copyright (C) 2014-2016, 2018 Matthias Bolte <matthias@tinkerforge.com>
  *
  * program_scheduler.c: Program object scheduler
  *
@@ -507,13 +507,18 @@ cleanup:
 			string_unlock_and_release(absolute_stdout_file_name);
 		}
 
+		// fall through
+
 	case 2:
 		if (program->config.stdin_redirection == PROGRAM_STDIO_REDIRECTION_FILE) {
 			string_unlock_and_release(absolute_stdin_file_name);
 		}
 
+		// fall through
+
 	case 1:
 		string_unlock_and_release(absolute_working_directory);
+		// fall through
 
 	default:
 		break;
@@ -1051,12 +1056,15 @@ cleanup:
 	switch (phase) { // no breaks, all cases fall through intentionally
 	case 3:
 		string_unlock_and_release(dev_null_file_name);
+		// fall through
 
 	case 2:
 		free(log_directory);
+		// fall through
 
 	case 1:
 		free(bin_directory);
+		// fall through
 
 	default:
 		break;
@@ -1264,12 +1272,15 @@ cleanup:
 	switch (phase) { // no breaks, all cases fall through intentionally
 	case 3:
 		object_remove_internal_reference(&stderr->base);
+		// fall through
 
 	case 2:
 		object_remove_internal_reference(&stdout->base);
+		// fall through
 
 	case 1:
 		object_remove_internal_reference(&stdin->base);
+		// fall through
 
 	default:
 		break;

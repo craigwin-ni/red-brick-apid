@@ -1,6 +1,6 @@
 /*
  * redapid
- * Copyright (C) 2014 Matthias Bolte <matthias@tinkerforge.com>
+ * Copyright (C) 2014, 2018 Matthias Bolte <matthias@tinkerforge.com>
  *
  * process_monitor.h: Monitor the spawn of processes via /proc
  *
@@ -383,14 +383,19 @@ cleanup:
 			timer_destroy(&observation->timer);
 		}
 
+		// fall through
+
 	case 3:
 		array_destroy(&observation->observers, NULL);
+		// fall through
 
 	case 2:
 		free(observation->cmdline_prefix);
+		// fall through
 
 	case 1:
 		array_remove(&_observations, _observations.count - 1, NULL);
+		// fall through
 
 	default:
 		break;

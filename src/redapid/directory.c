@@ -1,6 +1,6 @@
 /*
  * redapid
- * Copyright (C) 2014-2015 Matthias Bolte <matthias@tinkerforge.com>
+ * Copyright (C) 2014-2015, 2018 Matthias Bolte <matthias@tinkerforge.com>
  *
  * directory.c: Directory object implementation
  *
@@ -226,12 +226,15 @@ cleanup:
 	switch (phase) { // no breaks, all cases fall through intentionally
 	case 3:
 		free(directory);
+		// fall through
 
 	case 2:
 		closedir(dp);
+		// fall through
 
 	case 1:
 		string_unlock_and_release(name);
+		// fall through
 
 	default:
 		break;

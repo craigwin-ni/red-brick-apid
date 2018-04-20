@@ -1,6 +1,6 @@
 /*
  * redapid
- * Copyright (C) 2014, 2016 Matthias Bolte <matthias@tinkerforge.com>
+ * Copyright (C) 2014, 2016, 2018 Matthias Bolte <matthias@tinkerforge.com>
  *
  * cron.c: Cron specific functions
  *
@@ -300,11 +300,14 @@ cleanup:
 	switch (phase) { // no breaks, all cases fall through intentionally
 	case 2:
 		close(fd);
+		// fall through
 
 	case 1:
 		if (entry_appended) {
 			array_remove(&_entries, _entries.count - 1, NULL);
 		}
+
+		// fall through
 
 	default:
 		break;

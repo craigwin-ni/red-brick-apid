@@ -1,6 +1,6 @@
 /*
  * redapid
- * Copyright (C) 2014 Matthias Bolte <matthias@tinkerforge.com>
+ * Copyright (C) 2014, 2018 Matthias Bolte <matthias@tinkerforge.com>
  *
  * session.c: Session implementation
  *
@@ -147,9 +147,11 @@ cleanup:
 	switch (phase) { // no breaks, all cases fall through intentionally
 	case 2:
 		timer_destroy(&session->timer);
+		// fall through
 
 	case 1:
 		free(session);
+		// fall through
 
 	default:
 		break;

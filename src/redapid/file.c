@@ -885,15 +885,19 @@ cleanup:
 	switch (phase) { // no breaks, all cases fall through intentionally
 	case 4:
 		close(async_read_eventfd);
+		// fall through
 
 	case 3:
 		free(file);
+		// fall through
 
 	case 2:
 		close(fd);
+		// fall through
 
 	case 1:
 		string_unlock_and_release(name);
+		// fall through
 
 	default:
 		break;
@@ -1021,15 +1025,19 @@ cleanup:
 	switch (phase) { // no breaks, all cases fall through intentionally
 	case 4:
 		close(async_read_eventfd);
+		// fall through
 
 	case 3:
 		pipe_destroy(&file->pipe);
+		// fall through
 
 	case 2:
 		free(file);
+		// fall through
 
 	case 1:
 		string_unlock_and_release(name);
+		// fall through
 
 	default:
 		break;

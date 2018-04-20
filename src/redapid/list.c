@@ -1,6 +1,6 @@
 /*
  * redapid
- * Copyright (C) 2014-2015 Matthias Bolte <matthias@tinkerforge.com>
+ * Copyright (C) 2014-2015, 2018 Matthias Bolte <matthias@tinkerforge.com>
  *
  * list.c: List object implementation
  *
@@ -109,9 +109,11 @@ cleanup:
 	switch (phase) { // no breaks, all cases fall through intentionally
 	case 2:
 		array_destroy(&list->items, list_unlock_and_release_item);
+		// fall through
 
 	case 1:
 		free(list);
+		// fall through
 
 	default:
 		break;

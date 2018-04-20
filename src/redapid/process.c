@@ -828,46 +828,60 @@ cleanup:
 	switch (phase) { // no breaks, all cases fall through intentionally
 	case 14:
 		event_remove_source(process->state_change_pipe.base.read_handle, EVENT_SOURCE_TYPE_GENERIC);
+		// fall through
 
 	case 13:
 		pipe_destroy(&process->state_change_pipe);
+		// fall through
 
 	case 12:
 		free(process);
+		// fall through
 
 	case 11:
 		kill(pid, SIGKILL);
+		// fall through
 
 	case 10:
 		close(status_pipe[0]);
 		close(status_pipe[1]);
+		// fall through
 
 	case 9:
 		file_release(stderr);
+		// fall through
 
 	case 8:
 		file_release(stdout);
+		// fall through
 
 	case 7:
 		file_release(stdin);
+		// fall through
 
 	case 6:
 		string_unlock_and_release(working_directory);
+		// fall through
 
 	case 5:
 		array_destroy(&environment_array, NULL);
+		// fall through
 
 	case 4:
 		list_unlock_and_release(environment);
+		// fall through
 
 	case 3:
 		array_destroy(&arguments_array, NULL);
+		// fall through
 
 	case 2:
 		list_unlock_and_release(arguments);
+		// fall through
 
 	case 1:
 		string_unlock_and_release(executable);
+		// fall through
 
 	default:
 		break;
@@ -959,12 +973,15 @@ cleanup:
 	switch (phase) { // no breaks, all cases fall through intentionally
 	case 3:
 		object_remove_external_reference(&process->environment->base, session);
+		// fall through
 
 	case 2:
 		object_remove_external_reference(&process->arguments->base, session);
+		// fall through
 
 	case 1:
 		object_remove_external_reference(&process->executable->base, session);
+		// fall through
 
 	default:
 		break;
@@ -1024,9 +1041,11 @@ cleanup:
 	switch (phase) { // no breaks, all cases fall through intentionally
 	case 2:
 		object_remove_external_reference(&process->stdout->base, session);
+		// fall through
 
 	case 1:
 		object_remove_external_reference(&process->stdin->base, session);
+		// fall through
 
 	default:
 		break;

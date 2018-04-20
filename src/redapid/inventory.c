@@ -1,6 +1,6 @@
 /*
  * redapid
- * Copyright (C) 2014-2015 Matthias Bolte <matthias@tinkerforge.com>
+ * Copyright (C) 2014-2015, 2018 Matthias Bolte <matthias@tinkerforge.com>
  *
  * inventory.c: Inventory of objects
  *
@@ -221,8 +221,11 @@ cleanup:
 			array_destroy(&_objects[type], inventory_destroy_object);
 		}
 
+		// fall through
+
 	case 1:
 		array_destroy(&_sessions, inventory_destroy_session);
+		// fall through
 
 	default:
 		break;

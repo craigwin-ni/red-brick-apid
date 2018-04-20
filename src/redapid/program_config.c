@@ -1,6 +1,6 @@
 /*
  * redapid
- * Copyright (C) 2014-2015 Matthias Bolte <matthias@tinkerforge.com>
+ * Copyright (C) 2014-2015, 2018 Matthias Bolte <matthias@tinkerforge.com>
  *
  * program_config.c: Program object configuration
  *
@@ -560,21 +560,27 @@ cleanup:
 	switch (phase) { // no breaks, all cases fall through intentionally
 	case 6:
 		array_destroy(custom_options, program_custom_option_unlock_and_release);
+		// fall through
 
 	case 5:
 		free(custom_options);
+		// fall through
 
 	case 4:
 		string_unlock_and_release(working_directory);
+		// fall through
 
 	case 3:
 		list_unlock_and_release(environment);
+		// fall through
 
 	case 2:
 		list_unlock_and_release(arguments);
+		// fall through
 
 	case 1:
 		string_unlock_and_release(executable);
+		// fall through
 
 	default:
 		break;
@@ -983,44 +989,59 @@ cleanup:
 	switch (phase) { // no breaks, all cases fall through intentionally
 	case 11:
 		array_destroy(custom_options, program_custom_option_unlock_and_release);
+		// fall through
 
 	case 10:
 		free(custom_options);
+		// fall through
 
 	case 9:
 		if (start_mode == PROGRAM_START_MODE_CRON) {
 			string_unlock_and_release(start_fields);
 		}
 
+		// fall through
+
 	case 8:
 		if (stderr_redirection == PROGRAM_STDIO_REDIRECTION_FILE) {
 			string_unlock_and_release(stderr_file_name);
 		}
+
+		// fall through
 
 	case 7:
 		if (stdout_redirection == PROGRAM_STDIO_REDIRECTION_FILE) {
 			string_unlock_and_release(stdout_file_name);
 		}
 
+		// fall through
+
 	case 6:
 		if (stdin_redirection == PROGRAM_STDIO_REDIRECTION_FILE) {
 			string_unlock_and_release(stdin_file_name);
 		}
 
+		// fall through
+
 	case 5:
 		string_unlock_and_release(working_directory);
+		// fall through
 
 	case 4:
 		list_unlock_and_release(environment);
+		// fall through
 
 	case 3:
 		list_unlock_and_release(arguments);
+		// fall through
 
 	case 2:
 		string_unlock_and_release(executable);
+		// fall through
 
 	case 1:
 		conf_file_destroy(&conf_file);
+		// fall through
 
 	default:
 		break;
