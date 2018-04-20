@@ -1,6 +1,6 @@
 /*
  * redapid
- * Copyright (C) 2014-2015, 2017 Matthias Bolte <matthias@tinkerforge.com>
+ * Copyright (C) 2014-2015, 2017-2018 Matthias Bolte <matthias@tinkerforge.com>
  *
  * brickd.c: Brick Daemon specific functions
  *
@@ -153,7 +153,7 @@ int brickd_create(BrickDaemon *brickd, Socket *socket) {
 
 	// add I/O object as event source
 	if (event_add_source(brickd->socket->handle, EVENT_SOURCE_TYPE_GENERIC,
-	                     EVENT_READ, brickd_handle_read, brickd) < 0) {
+	                     "brickd", EVENT_READ, brickd_handle_read, brickd) < 0) {
 		writer_destroy(&brickd->response_writer);
 
 		return -1;

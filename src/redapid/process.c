@@ -1,6 +1,6 @@
 /*
  * redapid
- * Copyright (C) 2014-2017 Matthias Bolte <matthias@tinkerforge.com>
+ * Copyright (C) 2014-2018 Matthias Bolte <matthias@tinkerforge.com>
  *
  * process.c: Process object implementation
  *
@@ -784,7 +784,7 @@ APIE process_spawn(ObjectID executable_id, ObjectID arguments_id,
 	phase = 13;
 
 	if (event_add_source(process->state_change_pipe.base.read_handle, EVENT_SOURCE_TYPE_GENERIC,
-	                     EVENT_READ, process_handle_state_change, process) < 0) {
+	                     "process-state-change", EVENT_READ, process_handle_state_change, process) < 0) {
 		goto cleanup;
 	}
 

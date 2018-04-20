@@ -1,6 +1,6 @@
 /*
  * redapid
- * Copyright (C) 2014, 2017 Matthias Bolte <matthias@tinkerforge.com>
+ * Copyright (C) 2014, 2017-2018 Matthias Bolte <matthias@tinkerforge.com>
  *
  * socat.c: Socat client for incoming cron events
  *
@@ -88,7 +88,7 @@ int socat_create(Socat *socat, Socket *socket) {
 	socat->notification_used = 0;
 
 	return event_add_source(socat->socket->handle, EVENT_SOURCE_TYPE_GENERIC,
-	                        EVENT_READ, socat_handle_receive, socat);
+	                        "socat", EVENT_READ, socat_handle_receive, socat);
 }
 
 void socat_destroy(Socat *socat) {

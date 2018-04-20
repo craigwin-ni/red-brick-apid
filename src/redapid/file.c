@@ -1,6 +1,6 @@
 /*
  * redapid
- * Copyright (C) 2014-2017 Matthias Bolte <matthias@tinkerforge.com>
+ * Copyright (C) 2014-2018 Matthias Bolte <matthias@tinkerforge.com>
  *
  * file.c: File object implementation
  *
@@ -1191,7 +1191,7 @@ PacketE file_read_async(File *file, uint64_t length_to_read) {
 	// when done reading asynchronously then remove the eventfd from the event
 	// loop again
 	if (event_add_source(file->async_read_eventfd, EVENT_SOURCE_TYPE_GENERIC,
-	                     EVENT_READ, file_handle_async_read, file) < 0) {
+	                     "file-async-read", EVENT_READ, file_handle_async_read, file) < 0) {
 		// FIXME: this callback should be delivered after the response of this function
 		file_send_async_read_callback(file, API_E_INTERNAL_ERROR, NULL, 0);
 
@@ -1423,8 +1423,8 @@ APIE file_set_events(File *file, uint16_t events) {
 	}
 
 	if ((events & FILE_EVENT_READABLE) != 0 && (file->events & FILE_EVENT_READABLE) == 0) {
-		if (event_add_source(file->pipe.base.read_handle, EVENT_SOURCE_TYPE_GENERIC, EVENT_READ,
-		                     file_handle_readable_event, file) < 0) {
+		if (event_add_source(file->pipe.base.read_handle, EVENT_SOURCE_TYPE_GENERIC,
+		                     "pipe-read", EVENT_READ, file_handle_readable_event, file) < 0) {
 			return API_E_INTERNAL_ERROR;
 		}
 
@@ -1436,8 +1436,8 @@ APIE file_set_events(File *file, uint16_t events) {
 	}
 
 	if ((events & FILE_EVENT_WRITABLE) != 0 && (file->events & FILE_EVENT_WRITABLE) == 0) {
-		if (event_add_source(file->pipe.base.write_handle, EVENT_SOURCE_TYPE_GENERIC, EVENT_WRITE,
-		                     file_handle_writable_event, file) < 0) {
+		if (event_add_source(file->pipe.base.write_handle, EVENT_SOURCE_TYPE_GENERIC,
+		                     "pipe-write", EVENT_WRITE, file_handle_writable_event, file) < 0) {
 			return API_E_INTERNAL_ERROR;
 		}
 

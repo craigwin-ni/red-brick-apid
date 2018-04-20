@@ -1,6 +1,6 @@
 /*
  * redapid
- * Copyright (C) 2014-2015, 2017 Matthias Bolte <matthias@tinkerforge.com>
+ * Copyright (C) 2014-2015, 2017-2018 Matthias Bolte <matthias@tinkerforge.com>
  *
  * network.c: Network specific functions
  *
@@ -193,7 +193,7 @@ static int network_open_server_socket(Socket *server_socket,
 	log_debug("Started listening to '%s'", socket_filename);
 
 	if (event_add_source(server_socket->handle, EVENT_SOURCE_TYPE_GENERIC,
-	                     EVENT_READ, handle_accept, NULL) < 0) {
+	                     "server", EVENT_READ, handle_accept, NULL) < 0) {
 		goto error;
 	}
 
