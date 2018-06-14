@@ -90,8 +90,8 @@ SOURCES += ../daemonlib/file.c \
            ../daemonlib/signal.c \
            ../daemonlib/socket.c \
            ../daemonlib/socket_posix.c \
-           ../daemonlib/threads_posix.c \
-           ../daemonlib/timer_linux.c \
+           ../daemonlib/threads.c \
+           ../daemonlib/timer.c \
            ../daemonlib/utils.c \
            ../daemonlib/writer.c \
            acl.c \
