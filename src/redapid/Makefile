@@ -50,6 +50,10 @@ ifndef V
 endif
 endif
 
+ifeq ($(wildcard ../daemonlib),)
+$(error Could not find daemonlib. Please symlink or copy daemonlib into the src/ directory)
+endif
+
 ifeq ($(WITH_RED_BRICK),check)
 ifneq ($(wildcard /proc/red_brick_uid),)
 	# Linux and RED Brick <= 1.9
