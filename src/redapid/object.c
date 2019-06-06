@@ -1,6 +1,6 @@
 /*
  * redapid
- * Copyright (C) 2014-2016 Matthias Bolte <matthias@tinkerforge.com>
+ * Copyright (C) 2014-2016, 2019 Matthias Bolte <matthias@tinkerforge.com>
  *
  * object.c: Object implementation
  *
@@ -171,10 +171,10 @@ void object_log_signature(Object *object) {
 
 	object->signature(object, signature);
 
-	log_object_debug("Object (id: %u, type: %s, internal-reference-count: %d, external-reference-count: %d, lock-count: %d%s%s)",
-	                 object->id, object_get_type_name(object->type),
-	                 object->internal_reference_count, object->external_reference_count, object->lock_count,
-	                 signature != NULL ? ", " : "", signature);
+	log_warn("Object (id: %u, type: %s, internal-reference-count: %d, external-reference-count: %d, lock-count: %d%s%s)",
+	         object->id, object_get_type_name(object->type),
+	         object->internal_reference_count, object->external_reference_count, object->lock_count,
+	         signature != NULL ? ", " : "", signature);
 }
 
 // public API

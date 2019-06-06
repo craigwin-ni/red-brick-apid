@@ -1,6 +1,6 @@
 /*
  * redapid
- * Copyright (C) 2014-2015, 2018 Matthias Bolte <matthias@tinkerforge.com>
+ * Copyright (C) 2014-2015, 2018-2019 Matthias Bolte <matthias@tinkerforge.com>
  *
  * inventory.c: Inventory of objects
  *
@@ -466,7 +466,7 @@ void inventory_remove_session(Session *session) {
 	log_error("Could not find session (id: %u) to remove it", session->id);
 }
 
-APIE inventory_get_session(SessionID id, Session **session) {
+APIE inventory_get_session(SessionID id, const char *caller, Session **session) {
 	int i;
 	Session *candidate;
 
@@ -480,7 +480,7 @@ APIE inventory_get_session(SessionID id, Session **session) {
 		}
 	}
 
-	log_warn("Could not find session (id: %u)", id);
+	log_warn("Could not find session (id: %u) for %s", id, caller);
 
 	return API_E_UNKNOWN_SESSION_ID;
 }
@@ -541,7 +541,7 @@ void inventory_remove_object(Object *object) {
 	          object_get_type_name(object->type), object->id);
 }
 
-APIE inventory_get_object(ObjectType type, ObjectID id, Object **object) {
+APIE inventory_get_object(ObjectType type, ObjectID id, const char *caller, Object **object) {
 	ObjectType start_type;
 	ObjectType end_type;
 	ObjectType t;
@@ -569,9 +569,9 @@ APIE inventory_get_object(ObjectType type, ObjectID id, Object **object) {
 	}
 
 	if (type == OBJECT_TYPE_ANY) {
-		log_warn("Could not find object (id: %u)", id);
+		log_warn("Could not find object (id: %u) for %s", id, caller);
 	} else {
-		log_warn("Could not find %s object (id: %u)", object_get_type_name(type), id);
+		log_warn("Could not find %s object (id: %u) for %s", object_get_type_name(type), id, caller);
 	}
 
 	return API_E_UNKNOWN_OBJECT_ID;

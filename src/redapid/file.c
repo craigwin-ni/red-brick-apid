@@ -1,6 +1,6 @@
 /*
  * redapid
- * Copyright (C) 2014-2018 Matthias Bolte <matthias@tinkerforge.com>
+ * Copyright (C) 2014-2019 Matthias Bolte <matthias@tinkerforge.com>
  *
  * file.c: File object implementation
  *
@@ -737,7 +737,7 @@ APIE file_open(ObjectID name_id, uint32_t flags, uint16_t permissions,
 	}
 
 	// acquire and lock name string object
-	error_code = string_get_acquired_and_locked(name_id, &name);
+	error_code = string_get_acquired_and_locked(name_id, "file_open:name", &name);
 
 	if (error_code != API_E_SUCCESS) {
 		goto cleanup;
@@ -1482,8 +1482,9 @@ IOHandle file_get_write_handle(File *file) {
 	}
 }
 
-APIE file_get_acquired(ObjectID id, File **file) {
-	APIE error_code = inventory_get_object(OBJECT_TYPE_FILE, id, (Object **)file);
+APIE file_get_acquired(ObjectID id, const char *caller, File **file) {
+	APIE error_code = inventory_get_object(OBJECT_TYPE_FILE, id, caller,
+	                                       (Object **)file);
 
 	if (error_code != API_E_SUCCESS) {
 		return error_code;

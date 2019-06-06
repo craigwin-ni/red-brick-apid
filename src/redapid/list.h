@@ -1,6 +1,6 @@
 /*
  * redapid
- * Copyright (C) 2014-2015 Matthias Bolte <matthias@tinkerforge.com>
+ * Copyright (C) 2014-2015, 2019 Matthias Bolte <matthias@tinkerforge.com>
  *
  * list.h: List object implementation
  *
@@ -44,7 +44,8 @@ APIE list_remove_from(List *list, uint16_t index);
 
 APIE list_ensure_item_type(List *list, ObjectType type);
 
-APIE list_get_acquired_and_locked(ObjectID id, ObjectType item_type, List **list);
+APIE list_get_acquired_and_locked(ObjectID id, ObjectType item_type,
+                                  const char *caller, List **list);
 
 void list_acquire_and_lock(List *list);
 void list_unlock_and_release(List *list);

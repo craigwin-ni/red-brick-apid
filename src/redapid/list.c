@@ -1,6 +1,6 @@
 /*
  * redapid
- * Copyright (C) 2014-2015, 2018 Matthias Bolte <matthias@tinkerforge.com>
+ * Copyright (C) 2014-2015, 2018-2019 Matthias Bolte <matthias@tinkerforge.com>
  *
  * list.c: List object implementation
  *
@@ -183,7 +183,8 @@ APIE list_append_to(List *list, ObjectID item_id) {
 		return API_E_INVALID_OPERATION;
 	}
 
-	error_code = inventory_get_object(OBJECT_TYPE_ANY, item_id, &item);
+	error_code = inventory_get_object(OBJECT_TYPE_ANY, item_id,
+	                                  "list_append_to:item", &item);
 
 	if (error_code != API_E_SUCCESS) {
 		return error_code;
@@ -248,8 +249,9 @@ APIE list_ensure_item_type(List *list, ObjectType type) {
 	return API_E_SUCCESS;
 }
 
-APIE list_get_acquired_and_locked(ObjectID id, ObjectType item_type, List **list) {
-	APIE error_code = inventory_get_object(OBJECT_TYPE_LIST, id, (Object **)list);
+APIE list_get_acquired_and_locked(ObjectID id, ObjectType item_type,
+                                  const char *caller, List **list) {
+	APIE error_code = inventory_get_object(OBJECT_TYPE_LIST, id, caller, (Object **)list);
 
 	if (error_code != API_E_SUCCESS) {
 		return error_code;

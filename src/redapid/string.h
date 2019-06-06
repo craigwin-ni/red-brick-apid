@@ -1,6 +1,6 @@
 /*
  * redapid
- * Copyright (C) 2014-2015 Matthias Bolte <matthias@tinkerforge.com>
+ * Copyright (C) 2014-2015, 2019 Matthias Bolte <matthias@tinkerforge.com>
  *
  * string.h: String object implementation
  *
@@ -48,8 +48,8 @@ APIE string_get_length(String *string, uint32_t *length);
 APIE string_set_chunk(String *string, uint32_t offset, char *buffer);
 APIE string_get_chunk(String *string, uint32_t offset, char *buffer);
 
-APIE string_get(ObjectID id, String **string);
-APIE string_get_acquired_and_locked(ObjectID id, String **string);
+APIE string_get(ObjectID id, const char *caller, String **string);
+APIE string_get_acquired_and_locked(ObjectID id, const char *caller, String **string);
 
 void string_acquire_and_lock(String *string);
 void string_unlock_and_release(String *string);

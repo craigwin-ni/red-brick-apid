@@ -1,6 +1,6 @@
 /*
  * redapid
- * Copyright (C) 2014-2015, 2018 Matthias Bolte <matthias@tinkerforge.com>
+ * Copyright (C) 2014-2015, 2018-2019 Matthias Bolte <matthias@tinkerforge.com>
  *
  * directory.c: Directory object implementation
  *
@@ -134,7 +134,7 @@ APIE directory_open(ObjectID name_id, Session *session, ObjectID *id) {
 	Directory *directory;
 
 	// acquire and lock name string object
-	error_code = string_get_acquired_and_locked(name_id, &name);
+	error_code = string_get_acquired_and_locked(name_id, "directory_open:name", &name);
 
 	if (error_code != API_E_SUCCESS) {
 		goto cleanup;

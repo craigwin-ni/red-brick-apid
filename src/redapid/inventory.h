@@ -1,6 +1,6 @@
 /*
  * redapid
- * Copyright (C) 2014 Matthias Bolte <matthias@tinkerforge.com>
+ * Copyright (C) 2014, 2019 Matthias Bolte <matthias@tinkerforge.com>
  *
  * inventory.h: Inventory of objects
  *
@@ -40,11 +40,12 @@ void inventory_unload_programs(void);
 
 APIE inventory_add_session(Session *session);
 void inventory_remove_session(Session *session);
-APIE inventory_get_session(SessionID id, Session **session);
+APIE inventory_get_session(SessionID id, const char *caller, Session **session);
 
 APIE inventory_add_object(Object *object);
 void inventory_remove_object(Object *object);
-APIE inventory_get_object(ObjectType type, ObjectID id, Object **object);
+APIE inventory_get_object(ObjectType type, ObjectID id, const char *caller,
+                          Object **object);
 void inventory_for_each_object(ObjectType type, InventoryForEachObjectFunction function,
                                void *opaque);
 

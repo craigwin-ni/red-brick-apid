@@ -1,6 +1,6 @@
 /*
  * redapid
- * Copyright (C) 2014-2018 Matthias Bolte <matthias@tinkerforge.com>
+ * Copyright (C) 2014-2019 Matthias Bolte <matthias@tinkerforge.com>
  *
  * process.c: Process object implementation
  *
@@ -21,6 +21,7 @@
 
 #define _GNU_SOURCE // for execvpe from unistd.h
 #define _BSD_SOURCE // for getgrouplist and setgroups from grp.h
+#define _DEFAULT_SOURCE
 
 #include <errno.h>
 #include <grp.h>
@@ -402,7 +403,9 @@ APIE process_spawn(ObjectID executable_id, ObjectID arguments_id,
 	Process *process;
 
 	// acquire and lock executable string object
-	error_code = string_get_acquired_and_locked(executable_id, &executable);
+	error_code = string_get_acquired_and_locked(executable_id,
+	                                            "process_spawn:executable",
+	                                            &executable);
 
 	if (error_code != API_E_SUCCESS) {
 		goto cleanup;
@@ -420,6 +423,7 @@ APIE process_spawn(ObjectID executable_id, ObjectID arguments_id,
 
 	// lock arguments list object
 	error_code = list_get_acquired_and_locked(arguments_id, OBJECT_TYPE_STRING,
+	                                          "process_spawn:arguments",
 	                                          &arguments);
 
 	if (error_code != API_E_SUCCESS) {
@@ -483,6 +487,7 @@ APIE process_spawn(ObjectID executable_id, ObjectID arguments_id,
 
 	// lock environment list object
 	error_code = list_get_acquired_and_locked(environment_id, OBJECT_TYPE_STRING,
+	                                          "process_spawn:environment",
 	                                          &environment);
 
 	if (error_code != API_E_SUCCESS) {
@@ -534,7 +539,9 @@ APIE process_spawn(ObjectID executable_id, ObjectID arguments_id,
 	*item = NULL;
 
 	// acquire and lock working directory string object
-	error_code = string_get_acquired_and_locked(working_directory_id, &working_directory);
+	error_code = string_get_acquired_and_locked(working_directory_id,
+	                                            "process_spawn:working_directory",
+	                                            &working_directory);
 
 	if (error_code != API_E_SUCCESS) {
 		goto cleanup;
@@ -561,7 +568,7 @@ APIE process_spawn(ObjectID executable_id, ObjectID arguments_id,
 	}
 
 	// acquire stdin file object
-	error_code = file_get_acquired(stdin_id, &stdin);
+	error_code = file_get_acquired(stdin_id, "process_spawn:stdin", &stdin);
 
 	if (error_code != API_E_SUCCESS) {
 		goto cleanup;
@@ -570,7 +577,7 @@ APIE process_spawn(ObjectID executable_id, ObjectID arguments_id,
 	phase = 7;
 
 	// acquire stdout file object
-	error_code = file_get_acquired(stdout_id, &stdout);
+	error_code = file_get_acquired(stdout_id, "process_spawn:stdout", &stdout);
 
 	if (error_code != API_E_SUCCESS) {
 		goto cleanup;
@@ -579,7 +586,7 @@ APIE process_spawn(ObjectID executable_id, ObjectID arguments_id,
 	phase = 8;
 
 	// acquire stderr file object
-	error_code = file_get_acquired(stderr_id, &stderr);
+	error_code = file_get_acquired(stderr_id, "process_spawn:stderr", &stderr);
 
 	if (error_code != API_E_SUCCESS) {
 		goto cleanup;

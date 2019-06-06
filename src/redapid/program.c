@@ -1,6 +1,6 @@
 /*
  * redapid
- * Copyright (C) 2014-2015, 2018 Matthias Bolte <matthias@tinkerforge.com>
+ * Copyright (C) 2014-2015, 2018-2019 Matthias Bolte <matthias@tinkerforge.com>
  *
  * program.c: Program object implementation
  *
@@ -326,7 +326,9 @@ APIE program_define(ObjectID identifier_id, Session *session, ObjectID *id) {
 	Program *program;
 
 	// acquire and lock identifier string object
-	error_code = string_get_acquired_and_locked(identifier_id, &identifier);
+	error_code = string_get_acquired_and_locked(identifier_id,
+	                                            "program_define:identifier",
+	                                            &identifier);
 
 	if (error_code != API_E_SUCCESS) {
 		goto cleanup;
@@ -655,7 +657,9 @@ APIE program_set_command(Program *program, ObjectID executable_id,
 	}
 
 	// acquire and lock new executable string object
-	error_code = string_get_acquired_and_locked(executable_id, &executable);
+	error_code = string_get_acquired_and_locked(executable_id,
+	                                            "program_set_command:executable",
+	                                            &executable);
 
 	if (error_code != API_E_SUCCESS) {
 		goto cleanup;
@@ -673,6 +677,7 @@ APIE program_set_command(Program *program, ObjectID executable_id,
 
 	// lock new arguments list object
 	error_code = list_get_acquired_and_locked(arguments_id, OBJECT_TYPE_STRING,
+	                                          "program_set_command:arguments",
 	                                          &arguments);
 
 	if (error_code != API_E_SUCCESS) {
@@ -683,6 +688,7 @@ APIE program_set_command(Program *program, ObjectID executable_id,
 
 	// lock new environment list object
 	error_code = list_get_acquired_and_locked(environment_id, OBJECT_TYPE_STRING,
+	                                          "program_set_command:environment",
 	                                          &environment);
 
 	if (error_code != API_E_SUCCESS) {
@@ -693,6 +699,7 @@ APIE program_set_command(Program *program, ObjectID executable_id,
 
 	// acquire and lock new working directory string object
 	error_code = string_get_acquired_and_locked(working_directory_id,
+	                                            "program_set_command:working_directory",
 	                                            &working_directory);
 
 	if (error_code != API_E_SUCCESS) {
@@ -903,6 +910,7 @@ APIE program_set_stdio_redirection(Program *program,
 	// acquire and lock new stdin file name string object
 	if (stdin_redirection == PROGRAM_STDIO_REDIRECTION_FILE) {
 		error_code = string_get_acquired_and_locked(stdin_file_name_id,
+		                                            "program_set_stdio_redirection:stdin_file_name",
 		                                            &stdin_file_name);
 
 		if (error_code != API_E_SUCCESS) {
@@ -930,6 +938,7 @@ APIE program_set_stdio_redirection(Program *program,
 	// acquire and lock new stdout file name string object
 	if (stdout_redirection == PROGRAM_STDIO_REDIRECTION_FILE) {
 		error_code = string_get_acquired_and_locked(stdout_file_name_id,
+		                                            "program_set_stdio_redirection:stdout_file_name",
 		                                            &stdout_file_name);
 
 		if (error_code != API_E_SUCCESS) {
@@ -957,6 +966,7 @@ APIE program_set_stdio_redirection(Program *program,
 	// acquire and lock new stderr file name string object
 	if (stderr_redirection == PROGRAM_STDIO_REDIRECTION_FILE) {
 		error_code = string_get_acquired_and_locked(stderr_file_name_id,
+		                                            "program_set_stdio_redirection:stderr_file_name",
 		                                            &stderr_file_name);
 
 		if (error_code != API_E_SUCCESS) {
@@ -1185,7 +1195,9 @@ APIE program_set_schedule(Program *program,
 	}
 
 	if (start_mode == PROGRAM_START_MODE_CRON) {
-		error_code = string_get_acquired_and_locked(start_fields_id, &start_fields);
+		error_code = string_get_acquired_and_locked(start_fields_id,
+		                                            "program_set_schedule:start_fields",
+		                                            &start_fields);
 
 		if (error_code != API_E_SUCCESS) {
 			return error_code;
@@ -1405,13 +1417,13 @@ APIE program_set_custom_option_value(Program *program, ObjectID name_id,
 		return API_E_PROGRAM_IS_PURGED;
 	}
 
-	error_code = string_get(name_id, &name);
+	error_code = string_get(name_id, "program_set_custom_option_value:name", &name);
 
 	if (error_code != API_E_SUCCESS) {
 		return error_code;
 	}
 
-	error_code = string_get_acquired_and_locked(value_id, &value);
+	error_code = string_get_acquired_and_locked(value_id, "program_set_custom_option_value:value", &value);
 
 	if (error_code != API_E_SUCCESS) {
 		return error_code;
@@ -1494,7 +1506,7 @@ APIE program_get_custom_option_value(Program *program, Session *session,
 		return API_E_PROGRAM_IS_PURGED;
 	}
 
-	error_code = string_get(name_id, &name);
+	error_code = string_get(name_id, "program_get_custom_option_value:name", &name);
 
 	if (error_code != API_E_SUCCESS) {
 		return error_code;
@@ -1535,7 +1547,7 @@ APIE program_remove_custom_option(Program *program, ObjectID name_id) {
 		return API_E_PROGRAM_IS_PURGED;
 	}
 
-	error_code = string_get(name_id, &name);
+	error_code = string_get(name_id, "program_remove_custom_option:name", &name);
 
 	if (error_code != API_E_SUCCESS) {
 		return error_code;

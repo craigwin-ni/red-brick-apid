@@ -1,6 +1,6 @@
 /*
  * redapid
- * Copyright (C) 2014, 2018 Matthias Bolte <matthias@tinkerforge.com>
+ * Copyright (C) 2014, 2018-2019 Matthias Bolte <matthias@tinkerforge.com>
  *
  * session.c: Session implementation
  *
@@ -165,7 +165,7 @@ void session_destroy(Session *session) {
 	ExternalReference *external_reference;
 
 	if (session->external_reference_count != 0) {
-		log_warn("Destroying session (id: %u) while it is still tracking %d external reference(s) to the following objects (logged on debug level):",
+		log_warn("Destroying session (id: %u) while it is still tracking %d external reference(s) to the following objects:",
 		         session->id, session->external_reference_count);
 
 		external_reference_session_node = session->external_reference_sentinel.next;

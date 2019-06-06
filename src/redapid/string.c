@@ -1,6 +1,6 @@
 /*
  * redapid
- * Copyright (C) 2014-2015, 2018 Matthias Bolte <matthias@tinkerforge.com>
+ * Copyright (C) 2014-2015, 2018-2019 Matthias Bolte <matthias@tinkerforge.com>
  *
  * string.c: String object implementation
  *
@@ -402,12 +402,12 @@ APIE string_get_chunk(String *string, uint32_t offset, char *buffer) {
 	return API_E_SUCCESS;
 }
 
-APIE string_get(ObjectID id, String **string) {
-	return inventory_get_object(OBJECT_TYPE_STRING, id, (Object **)string);
+APIE string_get(ObjectID id, const char *caller, String **string) {
+	return inventory_get_object(OBJECT_TYPE_STRING, id, caller, (Object **)string);
 }
 
-APIE string_get_acquired_and_locked(ObjectID id, String **string) {
-	APIE error_code = inventory_get_object(OBJECT_TYPE_STRING, id, (Object **)string);
+APIE string_get_acquired_and_locked(ObjectID id, const char *caller, String **string) {
+	APIE error_code = inventory_get_object(OBJECT_TYPE_STRING, id, caller, (Object **)string);
 
 	if (error_code != API_E_SUCCESS) {
 		return error_code;

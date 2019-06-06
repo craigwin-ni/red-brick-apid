@@ -1,6 +1,6 @@
 /*
  * redapid
- * Copyright (C) 2014, 2016 Matthias Bolte <matthias@tinkerforge.com>
+ * Copyright (C) 2014, 2016, 2019 Matthias Bolte <matthias@tinkerforge.com>
  *
  * api.c: RED Brick API implementation
  *
@@ -203,7 +203,7 @@ static PacketE api_get_packet_error_code(APIE error_code) {
 		type *variable; \
 		api_prepare_response((Packet *)request, (Packet *)&response, sizeof(response)); \
 		response.error_code = inventory_get_object(object_type, request->variable##_id, \
-		                                           (Object **)&variable); \
+		                                           "api_"#function_suffix, (Object **)&variable); \
 		if (response.error_code == API_E_SUCCESS) { \
 			body \
 		} \
@@ -217,9 +217,9 @@ static PacketE api_get_packet_error_code(APIE error_code) {
 		Session *session; \
 		api_prepare_response((Packet *)request, (Packet *)&response, sizeof(response)); \
 		response.error_code = inventory_get_object(object_type, request->variable##_id, \
-		                                           (Object **)&variable); \
+		                                           "api_"#function_suffix, (Object **)&variable); \
 		if (response.error_code == API_E_SUCCESS) { \
-			response.error_code = inventory_get_session(request->session_id, &session); \
+			response.error_code = inventory_get_session(request->session_id, "api_"#function_suffix, &session); \
 			if (response.error_code == API_E_SUCCESS) { \
 				body \
 			} \
@@ -232,7 +232,7 @@ static PacketE api_get_packet_error_code(APIE error_code) {
 		packet_prefix##Response response; \
 		String *variable; \
 		api_prepare_response((Packet *)request, (Packet *)&response, sizeof(response)); \
-		response.error_code = string_get(request->variable##_string_id, &variable); \
+		response.error_code = string_get(request->variable##_string_id, "api_"#function_suffix, &variable); \
 		if (response.error_code == API_E_SUCCESS) { \
 			body \
 		} \
@@ -244,7 +244,7 @@ static PacketE api_get_packet_error_code(APIE error_code) {
 		packet_prefix##Response response; \
 		Session *session; \
 		api_prepare_response((Packet *)request, (Packet *)&response, sizeof(response)); \
-		response.error_code = inventory_get_session(request->session_id, &session); \
+		response.error_code = inventory_get_session(request->session_id, "api_"#function_suffix, &session); \
 		if (response.error_code == API_E_SUCCESS) { \
 			body \
 		} \
@@ -260,7 +260,7 @@ static PacketE api_get_packet_error_code(APIE error_code) {
 		packet_prefix##Response response; \
 		Session *session; \
 		api_prepare_response((Packet *)request, (Packet *)&response, sizeof(response)); \
-		response.error_code = inventory_get_session(request->session_id, &session); \
+		response.error_code = inventory_get_session(request->session_id, "api_"#function_suffix, &session); \
 		if (response.error_code == API_E_SUCCESS) { \
 			body \
 		} \
@@ -270,7 +270,7 @@ static PacketE api_get_packet_error_code(APIE error_code) {
 #define CALL_SESSION_PROCEDURE(packet_prefix, function_suffix, error_handler, body) \
 	static void api_##function_suffix(packet_prefix##Request *request) { \
 		Session *session; \
-		APIE api_error_code = inventory_get_session(request->session_id, &session); \
+		APIE api_error_code = inventory_get_session(request->session_id, "api_"#function_suffix, &session); \
 		PacketE packet_error_code; \
 		if (api_error_code != API_E_SUCCESS) { \
 			APIE error_code = api_error_code; \
@@ -311,9 +311,9 @@ CALL_SESSION_FUNCTION(KeepSessionAlive, keep_session_alive, {
 		Object *object; \
 		Session *session; \
 		api_prepare_response((Packet *)request, (Packet *)&response, sizeof(response)); \
-		response.error_code = inventory_get_object(OBJECT_TYPE_ANY, request->object_id, &object); \
+		response.error_code = inventory_get_object(OBJECT_TYPE_ANY, request->object_id, "api_"#function_suffix, &object); \
 		if (response.error_code == API_E_SUCCESS) { \
-			response.error_code = inventory_get_session(request->session_id, &session); \
+			response.error_code = inventory_get_session(request->session_id, "api_"#function_suffix, &session); \
 			if (response.error_code == API_E_SUCCESS) { \
 				body \
 			} \
@@ -324,7 +324,7 @@ CALL_SESSION_FUNCTION(KeepSessionAlive, keep_session_alive, {
 #define CALL_OBJECT_PROCEDURE_WITH_SESSION(packet_prefix, function_suffix, error_handler, body) \
 	static void api_##function_suffix(packet_prefix##Request *request) { \
 		Object *object; \
-		APIE api_error_code = inventory_get_object(OBJECT_TYPE_ANY, request->object_id, &object); \
+		APIE api_error_code = inventory_get_object(OBJECT_TYPE_ANY, request->object_id, "api_"#function_suffix, &object); \
 		PacketE packet_error_code; \
 		Session *session; \
 		if (api_error_code != API_E_SUCCESS) { \
@@ -333,7 +333,7 @@ CALL_SESSION_FUNCTION(KeepSessionAlive, keep_session_alive, {
 			error_handler \
 			packet_error_code = api_get_packet_error_code(api_error_code); \
 		} else { \
-			api_error_code = inventory_get_session(request->session_id, &session); \
+			api_error_code = inventory_get_session(request->session_id, "api_"#function_suffix, &session); \
 			if (api_error_code != API_E_SUCCESS) { \
 				APIE error_code = api_error_code; \
 				(void)error_code; \
@@ -446,7 +446,7 @@ CALL_LIST_FUNCTION(RemoveFromList, remove_from_list, {
 	static void api_##function_suffix(packet_prefix##Request *request) { \
 		File *file; \
 		APIE api_error_code = inventory_get_object(OBJECT_TYPE_FILE, request->file_id, \
-		                                           (Object **)&file); \
+		                                           "api_"#function_suffix, (Object **)&file); \
 		PacketE packet_error_code; \
 		if (api_error_code != API_E_SUCCESS) { \
 			APIE error_code = api_error_code; \
