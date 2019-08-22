@@ -381,7 +381,7 @@ APIE directory_create(const char *name, uint32_t flags, uint16_t permissions,
 	}
 
 	if ((permissions & ~FILE_PERMISSION_ALL) != 0) {
-		log_warn("Invalid file permissions %04o", permissions);
+		log_warn("Invalid file permissions 0o%04o", permissions);
 
 		return API_E_INVALID_PARAMETER;
 	}

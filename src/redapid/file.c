@@ -690,7 +690,7 @@ APIE file_open(ObjectID name_id, uint32_t flags, uint16_t permissions,
 	if ((permissions & ~FILE_PERMISSION_ALL) != 0) {
 		error_code = API_E_INVALID_PARAMETER;
 
-		log_warn("Invalid file permissions %04o", permissions);
+		log_warn("Invalid file permissions 0o%04o", permissions);
 
 		goto cleanup;
 	}
@@ -871,10 +871,10 @@ APIE file_open(ObjectID name_id, uint32_t flags, uint16_t permissions,
 	}
 
 	if ((flags & FILE_FLAG_TEMPORARY) != 0) {
-		log_debug("Created temporary file object ("FILE_SIGNATURE_FORMAT", permissions: %04o, uid: %u, gid: %u, handle: %d)",
+		log_debug("Created temporary file object ("FILE_SIGNATURE_FORMAT", permissions: 0o%04o, uid: %u, gid: %u, handle: %d)",
 		          file_expand_signature(file), permissions, uid, gid, fd);
 	} else if ((flags & FILE_FLAG_CREATE) != 0) {
-		log_debug("Opened/Created file object ("FILE_SIGNATURE_FORMAT", permissions: %04o, uid: %u, gid: %u, handle: %d)",
+		log_debug("Opened/Created file object ("FILE_SIGNATURE_FORMAT", permissions: 0o%04o, uid: %u, gid: %u, handle: %d)",
 		          file_expand_signature(file), permissions, uid, gid, fd);
 	} else {
 		log_debug("Opened file object ("FILE_SIGNATURE_FORMAT", uid: %u, gid: %u, handle: %d)",
