@@ -779,7 +779,7 @@ APIE process_spawn(ObjectID executable_id, ObjectID arguments_id,
 	process->timestamp = time(NULL);
 	process->exit_code = 0; // invalid
 
-	if (pipe_create(&process->state_change_pipe, 0) < 0) {
+	if (pipe_create(&process->state_change_pipe, PIPE_FLAG_NON_BLOCKING_READ) < 0) {
 		error_code = api_get_error_code_from_errno();
 
 		log_error("Could not create state change pipe child process (executable: %s, pid: %u): %s (%d)",
