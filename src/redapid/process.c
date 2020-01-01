@@ -670,13 +670,13 @@ APIE process_spawn(ObjectID executable_id, ObjectID arguments_id,
 		// stderr is the default log output in non-daemon mode. if this is
 		// the case then disable the log output before redirecting stderr to
 		// avoid polluting stderr for the new process
-		log_output = log_get_output();
+		log_get_output(&log_output, NULL);
 
 		if (log_output != NULL && log_output->write_handle == STDERR_FILENO) {
 			log_debug("Disable logging to stderr for child process (executable: %s, pid: %u)",
 			          executable->buffer, getpid());
 
-			log_set_output(NULL);
+			log_set_output(NULL, NULL);
 		}
 
 		// redirect stderr
@@ -703,7 +703,7 @@ APIE process_spawn(ObjectID executable_id, ObjectID arguments_id,
 		// the log file is still open at this point. the next step is to close
 		// all remaining file descriptors. just for good measure disable the
 		// log output beforehand
-		log_set_output(NULL);
+		log_set_output(NULL, NULL);
 
 		// close all file descriptors except the std* ones
 		for (i = STDERR_FILENO + 1; i < sc_open_max; ++i) {
