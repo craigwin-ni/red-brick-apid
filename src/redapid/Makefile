@@ -10,6 +10,7 @@ WITH_LOGGING ?= yes
 WITH_EPOLL ?= yes
 WITH_DEBUG ?= no
 WITH_RED_BRICK ?= check
+WITH_DEDICATED ?= no
 
 ## RULES ######################################################################
 
@@ -52,6 +53,11 @@ endif
 
 ifeq ($(wildcard ../daemonlib),)
 $(error Could not find daemonlib. Please symlink or copy daemonlib into the src/ directory)
+endif
+
+
+ifeq ($(WITH_DEDICATED),yes)
+    WITH_RED_BRICK := no
 endif
 
 ifeq ($(WITH_RED_BRICK),check)
@@ -151,6 +157,9 @@ ifeq ($(WITH_EPOLL),yes)
 endif
 
 CFLAGS += -DDAEMONLIB_WITH_RED_BRICK=${WITH_RED_BRICK}
+ifeq ($(WITH_DEDICATED),yes)
+CFLAGS += -DREDAPID_WITH_DEDICATED
+endif
 
 ifneq ($(MAKECMDGOALS),clean)
 $(info features:)
@@ -158,6 +167,7 @@ $(info - logging:   $(WITH_LOGGING))
 $(info - epoll:     $(WITH_EPOLL))
 $(info - debug:     $(WITH_DEBUG))
 $(info - red-brick: $(WITH_RED_BRICK))
+$(info - dedicated: $(WITH_DEDICATED))
 endif
 
 .PHONY: all clean

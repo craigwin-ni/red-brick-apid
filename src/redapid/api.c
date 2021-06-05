@@ -788,7 +788,11 @@ CALL_PROGRAM_FUNCTION(RemoveCustomProgramOption, remove_custom_program_option, {
 CALL_FUNCTION(GetIdentity, get_identity, {
 	base58_encode(response.uid, uint32_from_le(_uid));
 	strcpy(response.connected_uid, "0");
+#ifdef REDAPID_WITH_DEDICATED
+	response.position = 'X';
+#else
 	response.position = '0';
+#endif
 	response.hardware_version[0] = 1; // FIXME
 	response.hardware_version[1] = 0;
 	response.hardware_version[2] = 0;
@@ -815,6 +819,9 @@ int api_init(void) {
 
 	log_debug("Initializing API subsystem");
 
+#ifdef REDAPID_WITH_DEDICATED
+    _uid = dedicated_uid();
+#else
 	// read UID from /proc/red_brick_uid
 	if (red_brick_uid(&_uid) < 0) {
 		log_error("Could not get RED Brick UID: %s (%d)",
@@ -822,6 +829,7 @@ int api_init(void) {
 
 		return -1;
 	}
+#endif
 
 	log_debug("Using %s (%u) as RED Brick UID",
 	          base58_encode(base58, uint32_from_le(_uid)),
